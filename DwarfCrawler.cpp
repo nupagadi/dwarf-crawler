@@ -102,6 +102,12 @@ struct DwarfCrawler : IDwarfCrawler
         return MakeDwarfNode(mCurrentDie);
     }
 
+    void ReturnToParent() override
+    {
+        mCurrentDie = mParents.back();
+        mParents.pop_back();
+    }
+
 private:
 
     static TOptional<DwarfNode> MakeDwarfNode(Dwarf_Die aDie)
@@ -115,9 +121,6 @@ private:
         {
             throw std::runtime_error("Error in dwarf_diename");
         }
-//        else if (rc == DW_DLV_NO_ENTRY)
-//        {
-//        }
 
         if (dwarf_tag(aDie, &tag, &err) != DW_DLV_OK)
         {

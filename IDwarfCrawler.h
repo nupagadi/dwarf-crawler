@@ -53,6 +53,8 @@ struct IDwarfCrawler
     virtual TOptional<DwarfNode> NextSibling() = 0;
 
     virtual TOptional<DwarfNode> NextChild() = 0;
+
+    virtual void ReturnToParent() = 0;
 };
 
 std::unique_ptr<IDwarfCrawler> CreateDwarfCrawler(const std::string& aFileName);

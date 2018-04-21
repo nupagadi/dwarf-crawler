@@ -4,6 +4,25 @@
 
 #include "IDwarfCrawler.h"
 
+void OperateLayer(std::unique_ptr<dwarf_crawler::IDwarfCrawler>& aCrawler)
+{
+    auto current = aCrawler->NextChild();
+
+    while (auto current = aCrawler->NextSibling())
+    {
+        if (current->Tag != dwarf_crawler::DwarfTag::Unknown)
+        {
+            std::cout << *current;
+
+            if (current->Tag == dwarf_crawler::DwarfTag::Namespace)
+            {
+                OperateLayer(aCrawler);
+            }
+        }
+    }
+
+    aCrawler->ReturnToParent();
+}
 
 int main(int argc, char* argv[])
 {
@@ -18,36 +37,8 @@ int main(int argc, char* argv[])
     auto first = crawler->NextSibling();
     assert(first);
     std::cout << *first;
-    auto current = crawler->NextChild();
-    if (!current)
-    {
-        std::cerr << "Unexpected end" << std::endl;
-        return 1;
-    }
-    std::cout << *current;
 
-    while (auto current = crawler->NextSibling())
-    {
-        if (current->Tag != dwarf_crawler::DwarfTag::Unknown)
-        {
-            std::cout << *current;
-
-            if (current->Name == "top_stocks")
-            {
-                auto current2 = crawler->NextChild();
-                assert(current2);
-                std::cout << *current2;
-                while (auto current2 = crawler->NextSibling())
-                {
-                    if (current2->Tag != dwarf_crawler::DwarfTag::Unknown)
-                    {
-                        std::cout << *current2;
-                    }
-
-                }
-            }
-        }
-    }
+    OperateLayer(crawler);
 
     return 0;
 }
