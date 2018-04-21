@@ -1,4 +1,5 @@
 #include <cassert>
+#include <cstring>
 #include <iostream>
 #include <memory>
 
@@ -38,23 +39,56 @@ void OperateLayer(std::unique_ptr<dwarf_crawler::IDwarfCrawler>& aCrawler, size_
     aCrawler->ReturnToParent();
 }
 
-int main(int argc, char* argv[])
+void PrintHelp(std::ostream& aStream)
+{
+    aStream << "Usage:" << std::endl;
+    aStream << std::string(OffsetSize, ' ') << ApplicationName << " <application-name>" << std::endl;
+}
+
+void PrintVersion()
 {
     std::cout << ApplicationName << " " << ApplicationVersion() << std::endl;
-    if (argc < 2)
+}
+
+int main(int argc, char* argv[])
+{
+    if (argc != 2)
     {
-        std::cerr << "Should provide executable name" << std::endl;
-        return 1;
+        std::cerr << "Unsupported parameters!" << std::endl;
+        PrintHelp(std::cerr);
+        return EXIT_FAILURE;
     }
 
-    auto crawler = dwarf_crawler::CreateDwarfCrawler(argv[1]);
+    if (std::strcmp(argv[1], "--help") == 0)
+    {
+        PrintHelp(std::cout);
+        return EXIT_SUCCESS;
+    }
 
-    auto first = crawler->NextSibling();
-    assert(first);
-    std::cout << *first;
+    if (std::strcmp(argv[1], "--version") == 0)
+    {
+        PrintVersion();
+        return EXIT_SUCCESS;
+    }
 
-    OperateLayer(crawler);
+    PrintVersion();
+    try
+    {
+        auto crawler = dwarf_crawler::CreateDwarfCrawler(argv[1]);
 
-    return 0;
+        auto first = crawler->NextSibling();
+        assert(first);
+        std::cout << *first;
+
+        OperateLayer(crawler);
+    }
+    catch (const std::runtime_error& e)
+    {
+        std::cerr << e.what() << std::endl;
+        return EXIT_FAILURE;
+
+    }
+
+    return EXIT_SUCCESS;
 }
 
