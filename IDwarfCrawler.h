@@ -12,7 +12,7 @@ enum class DwarfTag
     Namespace,
     Class,
     Struct,
-    Subroutine,
+    Subprogram,
 };
 
 struct DwarfNode
