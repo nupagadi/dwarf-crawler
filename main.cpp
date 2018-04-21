@@ -2,9 +2,9 @@
 #include <iostream>
 #include <memory>
 
+#include "Config.h"
 #include "IDwarfCrawler.h"
 
-const constexpr size_t OffsetSize = 4;
 
 void OperateLayer(std::unique_ptr<dwarf_crawler::IDwarfCrawler>& aCrawler, size_t aOffset = 0)
 {
@@ -40,6 +40,7 @@ void OperateLayer(std::unique_ptr<dwarf_crawler::IDwarfCrawler>& aCrawler, size_
 
 int main(int argc, char* argv[])
 {
+    std::cout << ApplicationName << " " << ApplicationVersion() << std::endl;
     if (argc < 2)
     {
         std::cerr << "Should provide executable name" << std::endl;
