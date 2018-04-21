@@ -1,5 +1,7 @@
+#include <cassert>
 #include <iostream>
 #include <vector>
+#include <memory>
 
 extern "C"
 {
@@ -60,8 +62,19 @@ struct DwarfCrawler : IDwarfCrawler
     TOptional<DwarfNode> NextSibling() override
     {
         Dwarf_Error err;
+        int rc;
 
-        if (dwarf_siblingof(mDwarfDebug, mCurrentDie, &mCurrentDie, &err) == DW_DLV_ERROR)
+        auto prev = mCurrentDie;
+        dwarf_siblingof(mDwarfDebug, prev, &mCurrentDie, &err);
+        if (rc == DW_DLV_ERROR)
+        {
+            throw std::runtime_error("Error getting sibling of DIE");
+        }
+        else if (rc == DW_DLV_NO_ENTRY)
+        {
+            return {};
+        }
+        else if (prev == mCurrentDie)
         {
             return {};
         }
@@ -69,7 +82,25 @@ struct DwarfCrawler : IDwarfCrawler
         return MakeDwarfNode(mCurrentDie);
     }
 
-    TOptional<DwarfNode> NextChild() override;
+    TOptional<DwarfNode> NextChild() override
+    {
+        Dwarf_Error err;
+        int rc;
+
+        mParents.push_back(mCurrentDie);
+
+        rc = dwarf_child(mCurrentDie, &mCurrentDie, &err);
+        if (rc == DW_DLV_ERROR)
+        {
+            throw std::runtime_error("Error getting child of DIE");
+        }
+        else if (rc == DW_DLV_NO_ENTRY)
+        {
+            return {};
+        }
+
+        return MakeDwarfNode(mCurrentDie);
+    }
 
 private:
 
@@ -84,17 +115,16 @@ private:
         {
             throw std::runtime_error("Error in dwarf_diename");
         }
-        else if (rc == DW_DLV_NO_ENTRY)
-        {
-            return {};
-        }
+//        else if (rc == DW_DLV_NO_ENTRY)
+//        {
+//        }
 
         if (dwarf_tag(aDie, &tag, &err) != DW_DLV_OK)
         {
             throw std::runtime_error("Error in dwarf_tag");
         }
 
-        return {{Convert(tag), dieName}};
+        return {{Convert(tag), dieName ? dieName : ""}};
     }
 
     static DwarfTag Convert(Dwarf_Half aRaw)
@@ -110,7 +140,7 @@ private:
         case DW_TAG_namespace:
             return DwarfTag::Namespace;
         default:
-            DwarfTag::Unknown;
+            return DwarfTag::Unknown;
         }
     }
 
@@ -121,5 +151,10 @@ private:
     Dwarf_Die mCurrentDie = nullptr;
     std::vector<Dwarf_Die> mParents;
 };
+
+std::unique_ptr<IDwarfCrawler> CreateDwarfCrawler(const std::string& aFileName)
+{
+    return std::make_unique<DwarfCrawler>(aFileName);
+}
 
 }
