@@ -13,6 +13,7 @@ enum class DwarfTag
     Class,
     Struct,
     Subprogram,
+    Field,
 };
 
 inline std::ostream& operator <<(std::ostream& aStream, DwarfTag aTag)
@@ -27,6 +28,8 @@ inline std::ostream& operator <<(std::ostream& aStream, DwarfTag aTag)
         return aStream << "Struct";
     case DwarfTag::Subprogram:
         return aStream << "Subprogram";
+    case DwarfTag::Field:
+        return aStream << "Field";
     case DwarfTag::Unknown:
         return aStream << "UNKNOWN";
     }

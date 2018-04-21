@@ -142,6 +142,8 @@ private:
             return DwarfTag::Struct;
         case DW_TAG_namespace:
             return DwarfTag::Namespace;
+        case DW_TAG_member:
+            return DwarfTag::Field;
         default:
             return DwarfTag::Unknown;
         }
