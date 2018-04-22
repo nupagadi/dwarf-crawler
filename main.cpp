@@ -9,7 +9,7 @@
 
 
 void OperateLayer(
-    std::unique_ptr<dwarf_crawler::IDwarfCrawler>& aCrawler, const Config aConfig, const size_t aOffset = 0)
+    std::unique_ptr<dwarf_crawler::IDwarfCrawler>& aCrawler, const Config& aConfig, const size_t aOffset = 0)
 {
     auto current = aCrawler->NextChild();
 
