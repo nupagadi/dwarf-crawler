@@ -18,9 +18,10 @@ For example, to skip namespaces `std` and `__gnu_cxx` and struct `_IO_FILE` with
     dwarf-crawler path/to/application/to/explore --skip-noname --skip=std,__gnu_cxx,_IO_FILE
 
 ### Third-party libraries used
-[libdwarf](https://www.prevanders.net/dwarf.html)
+[libdwarf](https://www.prevanders.net/dwarf.html),
+[libelf](https://directory.fsf.org/wiki/Libelf),
+[libz](https://zlib.net/)
 
-[libelf](https://directory.fsf.org/wiki/Libelf)
 ### Code reused from another applications
 None.
 ### Licenses for the libraries and any code used
