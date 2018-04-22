@@ -41,12 +41,13 @@ Config MakeConfig(int argc, char* argv[])
 
     if (!skipList.empty())
     {
+        auto& sl = config.SkipList;
         skipList = skipList.substr(std::strlen("--show="));
 
         for (auto wordBegin = skipList.cbegin(), end = skipList.cend();;)
         {
             auto wordEnd = std::find(wordBegin, end, ',');
-            config.SkipList.emplace_back(wordBegin, wordEnd);
+            sl.emplace_back(wordBegin, wordEnd);
 
             if (wordEnd == end)
             {
@@ -55,6 +56,8 @@ Config MakeConfig(int argc, char* argv[])
 
             wordBegin = wordEnd + 1;
         }
+
+        sl.erase(std::remove(sl.begin(), sl.end(), ""), sl.end());
     }
 
     return config;
