@@ -7,13 +7,15 @@ Usage:
     dwarf-crawler --help
     dwarf-crawler --version
 
-    --skip - Skip nodes with such names. The content will also be skipped if the node is Class, Struct or Namespace.
+    --skip - Skip nodes with such names. The content will also be skipped if the node is Class, Struct 
+    or Namespace.
     --skip-noname - Skip nodes with no name.
-    --show-unknown - Show nodes with unknown types. Now Namespace, Class, Struct, Subprogram and Field are known.
+    --show-unknown - Show nodes with unknown types. Now Namespace, Class, Struct, Subprogram and Field 
+    are known.
 
-For example, to skip namespaces `std` and `__gnu_cxx` with all its content and also skip entries with no name:
+For example, to skip namespaces `std` and `__gnu_cxx` and struct `_IO_FILE` with all its content and also skip entries with no name:
 
-    dwarf-crawler path/to/application/to/explore --skip-noname --skip=std,__gnu_cxx
+    dwarf-crawler path/to/application/to/explore --skip-noname --skip=std,__gnu_cxx,_IO_FILE
 
 ### Third-party libraries used
 [libdwarf](https://www.prevanders.net/dwarf.html)
