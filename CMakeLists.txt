@@ -6,6 +6,7 @@ set(SOURCES
     IDwarfCrawler.h
     DwarfCrawler.cpp
     Config.h
+    Config.cpp
 )
 
 set(CMAKE_CXX_STANDARD 14)

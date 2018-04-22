@@ -18,6 +18,8 @@ namespace dwarf_crawler
 
 struct DwarfCrawler : IDwarfCrawler
 {
+    static const constexpr size_t MaxFileSize = 20 * (1 << 20);
+
     DwarfCrawler(const std::string& aFileName)
     {
         if ((mFileDecriptor = open(aFileName.c_str(), O_RDONLY)) < 0)
@@ -25,10 +27,17 @@ struct DwarfCrawler : IDwarfCrawler
             throw std::runtime_error("Error opening file");
         }
 
+        auto fileSize = lseek(mFileDecriptor, 0L, SEEK_END);
+        lseek(mFileDecriptor, 0L, SEEK_SET);
+        if (fileSize > MaxFileSize)
+        {
+            throw std::runtime_error("Unsupported file size. Max file size is " + std::to_string(MaxFileSize));
+        }
+
         Dwarf_Error err;
         if (dwarf_init(mFileDecriptor, DW_DLC_READ, 0, 0, &mDwarfDebug, &err) != DW_DLV_OK)
         {
-            throw std::runtime_error("Failed DWARF initialization");
+            throw std::runtime_error("Failed DWARF initialization. Usupported file format?");
         }
 
         Dwarf_Unsigned cu_header_length, abbrev_offset, next_cu_header;
@@ -98,6 +107,8 @@ struct DwarfCrawler : IDwarfCrawler
         {
             return {};
         }
+
+        assert(mParents.back() != mCurrentDie);
 
         return MakeDwarfNode(mCurrentDie);
     }
