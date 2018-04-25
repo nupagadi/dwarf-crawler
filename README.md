@@ -3,7 +3,7 @@
 ### Execution format
 Usage:
 
-    dwarf-crawler <application-name> [--skip=<name1>[|<name2>[|...]]] [--skip-noname] [--skip-unknown]
+    dwarf-crawler <application-name> [--skip=<name1>[,<name2>[,...]]] [--skip-noname] [--skip-unknown]
     dwarf-crawler --help
     dwarf-crawler --version
 
