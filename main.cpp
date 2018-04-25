@@ -61,7 +61,7 @@ void PrintHelp(std::ostream& aStream)
 {
     aStream << "Usage:" << std::endl;
     aStream << std::string(OffsetSize, ' ') << ApplicationName << " <application-name>"
-        << " [--skip=<name1>[|<name2>[|...]]]" << " [--skip-noname]" << " [--skip-unknown]" << std::endl;
+        << " [--skip=<name1>[,<name2>[,...]]]" << " [--skip-noname]" << " [--skip-unknown]" << std::endl;
     aStream << std::string(OffsetSize, ' ') << ApplicationName << " --help" << std::endl;
     aStream << std::string(OffsetSize, ' ') << ApplicationName << " --version" << std::endl;
 
