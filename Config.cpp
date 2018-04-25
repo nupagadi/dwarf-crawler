@@ -42,7 +42,7 @@ Config MakeConfig(int argc, char* argv[])
     if (!skipList.empty())
     {
         auto& sl = config.SkipList;
-        skipList = skipList.substr(std::strlen("--show="));
+        skipList = skipList.substr(std::strlen("--skip="));
 
         for (auto wordBegin = skipList.cbegin(), end = skipList.cend();;)
         {
